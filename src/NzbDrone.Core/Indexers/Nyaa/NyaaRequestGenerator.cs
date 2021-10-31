@@ -53,8 +53,16 @@ namespace NzbDrone.Core.Indexers.Nyaa
             foreach (var queryTitle in searchCriteria.SceneTitles)
             {
                 var searchTitle = PrepareQuery(queryTitle);
+                
+                if (Settings.AnimeSeasonalSearch && searchCriteria.SeasonNumber > 0 && searchCriteria.EpisodeNumber > 0)
+                {
+                    pageableRequests.Add(GetPagedRequests(MaxPages, $"{searchTitle}+{searchCriteria.SeasonNumber:00}+{searchCriteria.EpisodeNumber:00}"));
+                }
 
-                pageableRequests.Add(GetPagedRequests(MaxPages, $"{searchTitle}+{searchCriteria.AbsoluteEpisodeNumber:0}"));
+                if (searchCriteria.AbsoluteEpisodeNumber > 0)
+                {
+                    pageableRequests.Add(GetPagedRequests(MaxPages, $"{searchTitle}+{searchCriteria.AbsoluteEpisodeNumber:0}"));
+                }
 
                 if (searchCriteria.AbsoluteEpisodeNumber < 10)
                 {

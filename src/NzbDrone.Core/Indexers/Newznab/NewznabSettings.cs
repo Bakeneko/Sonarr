@@ -79,7 +79,10 @@ namespace NzbDrone.Core.Indexers.Newznab
         [FieldDefinition(4, Label = "Anime Categories", Type = FieldType.Select, SelectOptionsProviderAction = "newznabCategories", HelpText = "Drop down list, leave blank to disable anime")]
         public IEnumerable<int> AnimeCategories { get; set; }
 
-        [FieldDefinition(5, Label = "Additional Parameters", HelpText = "Additional Newznab parameters", Advanced = true)]
+        [FieldDefinition(5, Label = "Anime seasonal search", Type = FieldType.Checkbox, HelpText = "Add seasonal format search for Anime")]
+        public bool AnimeSeasonalSearch { get; set; }
+
+        [FieldDefinition(6, Label = "Additional Parameters", HelpText = "Additional Newznab parameters", Advanced = true)]
         public string AdditionalParameters { get; set; }
 
         // Field 6 is used by TorznabSettings MinimumSeeders

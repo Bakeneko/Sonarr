@@ -55,6 +55,11 @@ namespace NzbDrone.Core.Indexers.Fanzub
 
             var searchTitles = searchCriteria.CleanSceneTitles.SelectMany(v => GetTitleSearchStrings(v, searchCriteria.AbsoluteEpisodeNumber)).ToList();
 
+            if (Settings.AnimeSeasonalSearch && searchCriteria.SeasonNumber > 0 && searchCriteria.EpisodeNumber > 0)
+            {
+                searchTitles.AddRange(searchCriteria.CleanSceneTitles.SelectMany(v => GetTitleSearchStrings(v, searchCriteria.SeasonNumber, searchCriteria.EpisodeNumber)).ToList());
+            }
+
             pageableRequests.Add(GetPagedRequests(string.Join("|", searchTitles)));
 
             return pageableRequests;
@@ -83,6 +88,13 @@ namespace NzbDrone.Core.Indexers.Fanzub
             var formats = new[] { "{0}%20{1:00}", "{0}%20-%20{1:00}" };
 
             return formats.Select(s => "\"" + string.Format(s, CleanTitle(title), absoluteEpisodeNumber) + "\"");
+        }
+
+        private IEnumerable<string> GetTitleSearchStrings(string title, int seasonNumber, int episodeNumber)
+        {
+            var formats = new[] { "{0}%20S{1:00}E{2:00}", "{0}%20-%20S{1:00}E{2:00}" };
+
+            return formats.Select(s => "\"" + string.Format(s, CleanTitle(title), seasonNumber, episodeNumber) + "\"");
         }
 
         private string CleanTitle(string title)
